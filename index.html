@@ -19,14 +19,38 @@
     body {
       height: 100vh;
       width: 100vw;
-      background: radial-gradient(circle at 30% 20%, #1a000f, #0f0015 30%, #000 65%);
+      background: #000;
       overflow: hidden;
       font-family: 'Poppins', sans-serif;
       color: #fff;
       cursor: none;
     }
 
-    /* Custom cursor - more naughty */
+    /* Video background */
+    #bg-video {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      min-width: 100%;
+      min-height: 100%;
+      width: auto;
+      height: auto;
+      transform: translateX(-50%) translateY(-50%);
+      object-fit: cover;
+      z-index: -10;
+      opacity: 0.32;           /* low opacity – adjust between 0.2–0.4 */
+    }
+
+    /* Darker overlay on video to improve text readability */
+    .video-overlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 30%, rgba(0,0,0,0.4) 20%, rgba(0,0,0,0.75) 80%);
+      z-index: -9;
+      pointer-events: none;
+    }
+
+    /* Custom cursor */
     .cursor {
       position: fixed;
       width: 36px;
@@ -62,6 +86,7 @@
       align-items: center;
       justify-content: center;
       overflow: hidden;
+      z-index: 1;
     }
 
     .main-text {
@@ -156,17 +181,15 @@
       0%,100% { transform: scale(0.7); opacity: 0.35; }
       50%     { transform: scale(1.6); opacity: 0.85; }
     }
-
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 50% 25%, transparent 20%, rgba(0,0,0,0.75) 100%);
-      pointer-events: none;
-      z-index: 8;
-    }
   </style>
 </head>
 <body>
+
+<video autoplay muted loop playsinline id="bg-video">
+  <source src="https://files.catbox.moe/ntaibt.mp4" type="video/mp4">
+</video>
+
+<div class="video-overlay"></div>
 
 <div class="cursor"></div>
 <div class="cursor-follower"></div>
@@ -177,9 +200,7 @@
 
   <h1 class="main-text">CHUDOGI</h1>
 
-  <div class="overlay"></div>
-
-  <!-- Much hornier stickers -->
+  <!-- Hornier stickers -->
   <div class="sticker" style="top:12%; left:6%;">🥵</div>
   <div class="sticker fast" style="top:18%; right:10%;">🍆</div>
   <div class="sticker intense" style="bottom:15%; left:14%;">🍑</div>

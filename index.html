@@ -97,36 +97,23 @@
       to   { transform: scale(1.04); }
     }
 
-    .sticker {
-      position: absolute;
-      font-size: clamp(2rem, 6vw, 4.5rem);
-      opacity: 0.15;
+    /* Kiss mark animation */
+    .kiss {
+      position: fixed;
       pointer-events: none;
       user-select: none;
-      animation: float 18s infinite ease-in-out, rotateSlow 40s linear infinite;
-      z-index: 5;
+      z-index: 6;
+      transform-origin: center center;
+      animation: kissAnim 2.8s ease-out forwards;
     }
 
-    .sticker.fast {
-      animation-duration: 12s, 25s;
-      opacity: 0.25;
+    @keyframes kissAnim {
+      0%   { opacity: 0; transform: scale(0.2) rotate(var(--rot)); }
+      15%  { opacity: 1; transform: scale(1.2) rotate(var(--rot)); }
+      30%  { opacity: 0.85; transform: scale(1) rotate(var(--rot)); }
+      70%  { opacity: 0.6; transform: scale(1) rotate(var(--rot)); }
+      100% { opacity: 0; transform: scale(0.8) rotate(var(--rot)); }
     }
-
-    .sticker:nth-child(odd)  { color: #ff2e63; }
-    .sticker:nth-child(even) { color: #ff69b4; }
-
-    @keyframes float {
-      0%,100% { transform: translateY(0) rotate(0deg); }
-      25%     { transform: translateY(-80px) rotate(8deg); }
-      50%     { transform: translateY(0) rotate(0deg); }
-      75%     { transform: translateY(80px) rotate(-10deg); }
-    }
-
-    @keyframes rotateSlow {
-      from { transform: rotate(0deg); }
-      to   { transform: rotate(360deg); }
-    }
-
     .glow-ring {
       position: absolute;
       width: min(600px, 80vw);
@@ -181,7 +168,7 @@
 <body>
 
 <!-- Background Video -->
-<video class="bg-video" autoplay muted loop playsinline>
+<video class="bg-video" id="bgVid" muted loop playsinline disablePictureInPicture controlsList="nodownload nofullscreen noremoteplayback">
   <source src="https://files.catbox.moe/ntaibt.mp4" type="video/mp4">
 </video>
 <div class="video-tint"></div>
@@ -196,21 +183,27 @@
   <h1 class="main-text">CHUDOGI</h1>
 
   <div class="overlay"></div>
-
-  <div class="sticker" style="top:15%; left:8%;">🥵</div>
-  <div class="sticker fast" style="top:22%; right:12%;">🔥</div>
-  <div class="sticker" style="bottom:18%; left:18%;">😈</div>
-  <div class="sticker fast" style="bottom:25%; right:15%;">💦</div>
-  <div class="sticker" style="top:40%; left:5%;">🪔</div>
-  <div class="sticker" style="top:55%; right:8%; animation-delay:3s;">🍑</div>
-  <div class="sticker fast" style="bottom:12%; left:22%;">👅</div>
-  <div class="sticker" style="top:8%; right:20%; animation-delay:6s;">🌶️</div>
-  <div class="sticker" style="bottom:35%; left:10%;">😏</div>
 </div>
 
 <script>
   const cursor = document.querySelector('.cursor');
   const follower = document.querySelector('.cursor-follower');
+  const vid = document.getElementById('bgVid');
+
+  // Force autoplay (muted = allowed by all browsers)
+  vid.play().catch(() => {
+    document.addEventListener('click', () => vid.play(), { once: true });
+    document.addEventListener('touchstart', () => vid.play(), { once: true });
+  });
+
+  // Block right-click — prevents "Save video as"
+  document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+  // Block long press on mobile video
+  vid.addEventListener('contextmenu', (e) => e.preventDefault());
+  document.addEventListener('touchstart', (e) => {
+    if (e.target.tagName === 'VIDEO') e.preventDefault();
+  }, { passive: false });
 
   document.addEventListener('mousemove', (e) => {
     cursor.style.left = e.clientX + 'px';
